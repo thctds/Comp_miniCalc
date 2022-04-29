@@ -18,7 +18,7 @@ void InicializaLexer(char *arqFonte) {
 
     pos = 0;
 
-    tok = (Token*) malloc(sizeof(Token));
+    tok = (Token *) malloc(sizeof(Token));
 
     if (tok == NULL) {
         fprintf(stderr, "Erro alocando memoria para o token\n");
@@ -33,8 +33,8 @@ bool eof() {
     return !(pos < buffer->tam - 1);
 }
 
-char* TextoToken(long ini, long fim) {
-    char *str = (char*) malloc(fim - ini + 1);
+char *TextoToken(long ini, long fim) {
+    char *str = (char *) malloc(fim - ini + 1);
 
     if (str == NULL) {
         fprintf(stderr, "Erro alocando memoria\n");
@@ -57,7 +57,8 @@ bool simbolo(char c) {
 // função: ProximoToken
 //
 // Dado o arquivo-fonte, obtem e retorna o próximo token
-Token* ProximoToken() {
+Token *ProximoToken() {
+
     // TODO: obtem o proximo token da entrada e preenche tok
 
     // pula espaços em branco
@@ -73,8 +74,7 @@ Token* ProximoToken() {
             pos++;
         // texto do token: entre initPos e pos-1 no buffer
         char *texto = TextoToken(initPos, pos);
-        if (strcmp(texto, "print") == 0)
-        {
+        if (strcmp(texto, "print") == 0) {
             tok->tipo = TOKEN_PRINT;
             tok->valor = 0;
         } else {
@@ -85,12 +85,25 @@ Token* ProximoToken() {
     } else if (isdigit(buffer->cont[pos])) {
         long initPos = pos;
         // TODO: verificar se existe erro léxico no final do literal inteiro
-        while (!eof() && isdigit(buffer->cont[pos]))
+        while (!eof() && isdigit(buffer->cont[pos])) {
             pos++;
-        char *texto = TextoToken(initPos, pos);
-        tok->tipo = TOKEN_INT;
-        tok->valor = atoi(texto);
-        free(texto);
+
+            if (buffer->cont[pos] == '.') {
+                pos++;
+                while (!eof() && isdigit(buffer->cont[pos]))
+                    pos++;
+                char *texto = TextoToken(initPos, pos+1);
+                tok->tipo = TOKEN_FLOAT;
+                tok->valor = atof(texto);
+                free(texto);
+                return tok;
+            }
+
+            char *texto = TextoToken(initPos, pos);
+            tok->tipo = TOKEN_INT;
+            tok->valor = atoi(texto);
+            free(texto);
+        }
     } else if (simbolo(buffer->cont[pos])) {
         switch (buffer->cont[pos]) {
             case '(':
