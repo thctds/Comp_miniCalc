@@ -1,1 +1,2 @@
-print (289 + 34)
+# Comentário 
+print (289.5 + 34)

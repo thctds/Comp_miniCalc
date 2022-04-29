@@ -47,6 +47,9 @@ void ImprimeTipoToken(TipoToken tipo) {
         case TOKEN_ERRO:
             printf("TOKEN_ERRO");
             break;
+        case TOKEN_FLOAT:
+            printf("TOKEN_FLOAT");
+            break;
         default:
             printf("Tipo desconhecido");
     }
@@ -59,7 +62,7 @@ int main() {
     while (t->tipo != TOKEN_EOF) {
         printf("Tipo do token: ");
         ImprimeTipoToken(t->tipo);
-        printf(" - Valor do token: %d\n", t->valor);
+        printf(" - Valor do token: %f\n", t->valor);
 
         t = ProximoToken();
     }
